@@ -1,0 +1,36 @@
+<html>
+<body>
+{{^name}}
+<h3>
+    Want to see a sweet list bro?! Click login below!
+</h3>
+<br>
+<br>
+<a href="/login">Login</a>
+{{/name}}
+
+{{#name}}
+Welcome {{name}}!
+<br>
+<br>
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
+<br>
+<br>
+<form action="/create-message" method="post">
+<input type="text" placeholder="Write a message" name="uMessage"/>
+<button type="submit">Submit</button>
+</form>
+<br>
+<br>
+<ol>
+{{#messages}}
+    <li>{{message}}</li>
+{{/messages}}
+</ol>
+{{/name}}
+<br>
+<br>
+</body>
+</html>
