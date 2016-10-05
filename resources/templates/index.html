@@ -1,7 +1,6 @@
 <html>
 <head>
     <style>
-
         #textBox {
             height: 30px;
             width: 300px;
@@ -13,8 +12,8 @@
         }
         button {
             background-color: blue;
-            height: 30px;
-            width: 50px;
+            height: 40px;
+            width: 60px;
             font-weight: bold;
             color: white;
         }
@@ -27,14 +26,25 @@
             margin-top: 3%;
         }
         #userMessage {
-            margin-left: 39%;
+
+        }
+        form {
+            display: inline;
         }
         input {
-            height: 30px;
-            width: 300px;
+            height: 20px;
+            width: 220px;
+            padding: 20px;
+            margin-left: 3%;
+            font-size: 16px;
+        }
+        #editM {
+            padding: 0px;
+            height: 20px;
+            width: 220px;
+            font-size: 16px;
         }
     </style>
-
 </head>
 <body>
 {{^name}}
@@ -57,19 +67,51 @@
 
 <br>
 <br>
-
+<div id="control">
 <form action="/create-message" method="post" id="userMessage">
 <input type="text" placeholder="Write a message" name="uMessage"/>
 <button type="submit">Submit</button>
 </form>
+<form action="/delete-message" method="post" id="removeUM">
+    <input type="text" placeholder="Enter message number to delete" name="deleteUM">
+    <button type="submit">Delete</button>
+</form>
+<form action="/edit-message" method="post" id="editM">
+    <input type="text" placeholder="Enter message number to edit" name="theIndex">
+    <input type="text" placeholder="Edit message" name="messageEdit">
+    <button type="submit">Edit</button>
+</form>
+</div>
 
 <br>
 <br>
-<table align="center">
+<script>
+        var j = 0;
+        var myMessages = document.getElementByTagName('li');
+        for (i = 0; i < myMessages.length; i++) {
+            j++;
+        }
+        var myTD = document.getElementByTagName('td');
+        myTD.innerHTML(j);
+
+        myTable = document.getElementById("theTable");
+
+    </script>
+<table align="center" border="1px" width="400px" id="theTable">
 <p align="center" id="startList">Messages by {{name}}:</p>
+
 <ol style="text-align:center; list-style-position:inside;">
+<form action="/delete-message" method="post">
+        <th>Delete</th>
+        <th>Message</th>
+        <th>Remove</th>
 {{#messages}}
-<li>{{message}}</li>
+    <tr>
+        <td></td>
+        <td>{{message}}</td>
+        <td><button type="submit" style="width= 30px">Delete</button></li></td>
+    </tr>
+</form>
 {{/messages}}
 </ol>
 </table>
