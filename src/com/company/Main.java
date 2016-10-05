@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        HashMap<String, User> users = new HashMap<>();
+        HashMap<String, User> users = jsonReader().getUserWrapper();
         Spark.get(
                 "/",
                 (request, response) -> {
@@ -141,19 +141,21 @@ public class Main {
     public static void jsonWriter(HashMap users) throws IOException {
         File file = new File("users.json");
         JsonSerializer serializer = new JsonSerializer();
-        String json = serializer.deep(true).serialize(users);
+        MapWrapper mw = new MapWrapper();
+        mw.userWrapper = users;
+        String json = serializer.deep(true).serialize(mw);
         FileWriter jsonWriter = new FileWriter(file);
         jsonWriter.write(json);
         jsonWriter.close();
     }
 
-    public static HashMap jsonReader() throws IOException {
+    public static MapWrapper jsonReader() throws IOException {
         File file = new File("users.json");
         FileReader fr = new FileReader(file);
         int fileSize = (int) file.length();
         char[] contents = new char[fileSize];
         fr.read(contents, 0, fileSize);
         JsonParser parser = new JsonParser();
-        return parser.parse(contents, HashMap.class);
+        return parser.parse(contents, MapWrapper.class);
     }
 }
