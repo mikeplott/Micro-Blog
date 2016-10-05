@@ -105,11 +105,12 @@ public class Main {
                     String username = session.attribute("uName");
                     User user = users.get(username);
                     String text = request.queryParams("deleteUM");
-                    int index = Integer.parseInt(text) - 1;
-                    if (index < 0) {
-                        response.redirect("/");
+                    System.out.println(text);
+                    for (int i = 0; i < user.messages.size(); i++) {
+                        if (user.messages.get(i).message.equals(text)) {
+                            user.messages.remove(i);
+                        }
                     }
-                    user.messages.remove(index);
                     users.put(username, user);
                     jsonWriter(users);
                     response.redirect("/");
