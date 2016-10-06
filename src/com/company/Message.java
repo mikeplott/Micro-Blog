@@ -53,4 +53,14 @@ public class Message {
     public void setReplies(ArrayList<Reply> replies) {
         this.replies = replies;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "message='" + message + '\'' +
+                ", author='" + author + '\'' +
+                ", isPublic=" + isPublic +
+                ", replies=" + replies +
+                '}';
+    }
 }

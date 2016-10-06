@@ -14,8 +14,9 @@
                 <td align="center" id="col">
                     {{message}}
                 </td>
-                <td>
-                    {{pubRep}}
+                <td>{{#reply}}
+                    {{replies}}
+                    {{/reply}}
                 </td>
                 <td>
                     <form action="/reply" method="post">

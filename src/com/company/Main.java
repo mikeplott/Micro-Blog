@@ -18,6 +18,7 @@ public class Main {
 
         HashMap<String, User> users = jsonReader().getUserWrapper();
         ArrayList<Message> publicM = new ArrayList<>();
+        //HashMap<String, Message> pubMes = new HashMap<>();
 
         Spark.get(
                 "/",
@@ -30,7 +31,6 @@ public class Main {
                         m.put("name", user.name);
                         m.put("messages", user.messages);
                     }
-
                     return new ModelAndView(m, "index.html");
                 },
                 new MustacheTemplateEngine()
@@ -53,9 +53,16 @@ public class Main {
                     HashMap m = new HashMap();
                     if (user != null) {
                         m.put("name", user.name);
+                       // m.put("public", pubMes);
                         m.put("public", publicM);
                         for (int i = 0; i < publicM.size(); i++) {
-                            m.put("pubRep", publicM.get(i).replies);
+                            Message mes = publicM.get(i);
+                         //   m.put("reply", mes.replies);
+                            for (int j = 0; j < mes.replies.size(); j++) {
+                                m.put("reply", mes.replies.get(j).reply + " " + mes.replies.get(j).repAuthor);
+                                System.out.println(mes.replies.get(j));
+                            }
+                            //m.put("pubRep", publicM.get(i).replies.);
                         }
                         System.out.println(m);
                     }
@@ -88,8 +95,6 @@ public class Main {
 
                     Session session = request.session();
                     session.attribute("uName", user.name);
-                    System.out.println(user.name);
-                    System.out.println(user.password);
                     response.redirect("/");
                     return null;
                 }
@@ -118,10 +123,7 @@ public class Main {
                     if (pub != null) {
                         message.isPublic = true;
                         publicM.add(message);
-                    }
-                    for (int i = 0; i < publicM.size(); i++) {
-                        Message test = publicM.get(i);
-                        System.out.println(test.author + " " + test.message + " " + test.isPublic);
+              //          pubMes.put(user.name + message.message, message);
                     }
                     user.messages.add(message);
                     users.put(username, user);
@@ -146,6 +148,11 @@ public class Main {
                                         publicM.remove(i);
                                     }
                                 }
+//                                for (String key : pubMes.keySet()) {
+//                                    if (pubMes.get(key).message.equals(text)) {
+//                                        pubMes.remove(key);
+//                                    }
+//                                }
                             }
                             user.messages.remove(i);
                         }
@@ -185,15 +192,25 @@ public class Main {
                     String username = session.attribute("uName");
                     User user = users.get(username);
                     String theMes = request.queryParams("tarMes");
-                    System.out.println(theMes);
                     String text = request.queryParams("mReply");
+                    Reply theReply = new Reply(text, user.name);
+//                    for (String key : pubMes.keySet()) {
+//                        if (pubMes.get(key).message.equals(theMes)) {
+//                            Message message = pubMes.get(key);
+//                            message.replies.add(theReply);
+//                            System.out.println(message.replies);
+//                        }
+//                    }
                     for (int i = 0; i < publicM.size(); i++) {
-                        if (publicM.get(i).equals(theMes)) {
-                            Message rep = publicM.get(i);
-                            System.out.println(rep);
-                            Reply theR = new Reply(text, user.name, true, new ArrayList<>());
-                            System.out.println(theR.message + " " + theR.author);
-                            rep.replies.add(theR);
+//                        if (publicM.get(i).equals(theMes)) {
+//                            Message rep = publicM.get(i);
+//                            rep.replies.add(theReply);
+//                            //rep.replies.add(theReply);
+//                            System.out.println(rep.replies);
+                        //}
+                        Message message = publicM.get(i);
+                        if (message.message.equals(theMes)) {
+                            message.replies.add(theReply);
                         }
                     }
                     response.redirect("/public");
@@ -221,4 +238,5 @@ public class Main {
         JsonParser parser = new JsonParser();
         return parser.parse(contents, MapWrapper.class);
     }
+
 }
