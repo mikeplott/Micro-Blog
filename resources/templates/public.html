@@ -1,0 +1,32 @@
+<html>
+<body>
+{{#name}}
+<h3>
+    Welcome {{name}}! Here you can view messages that every marks as public!
+</h3>
+<table align="center" border="1px;">
+    <th>Posted by</th>
+    <th>Message</th>
+    <th>Replies</th>
+            {{#public}}
+            <tr>
+                <td>{{author}}</td>
+                <td align="center" id="col">
+                    {{message}}
+                </td>
+                <td>
+                    {{pubRep}}
+                </td>
+                <td>
+                    <form action="/reply" method="post">
+                        <input type="hidden" value="{{message}}" name="tarMes">
+                        <input type="text" name="mReply">
+                        <button type="Submit">Reply </button>
+                    </form>
+                </td>
+            </tr>
+            {{/public}}
+    </table>
+{{/name}}
+</body>
+</html>

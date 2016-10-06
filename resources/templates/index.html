@@ -44,6 +44,27 @@
             width: 220px;
             font-size: 16px;
         }
+        #del {
+            height: 20px;
+            width: 40px;
+            color: light-blue;
+            border: outset;
+            margin-left: 100px;
+        }
+        #col {
+
+        }
+        tableasdf {
+            width: 15;
+            font-size: 16px;
+            font-color: LavenderBlush;
+            background-color: gray;
+            border-radius: 25px;
+        }
+        ol {
+            background-color: gray;
+            border-radius: 25px;
+        }
     </style>
 </head>
 <body>
@@ -64,13 +85,16 @@
 <form action="/logout" method="post" display="inline">
 <button type="submit" id="logout">Logout</button>
 </form>
+<a href="/public">Community Posts</a>
 
 <br>
 <br>
 <div id="control">
 <form action="/create-message" method="post" id="userMessage">
-<input type="text" placeholder="Write a message" name="uMessage"/>
-<button type="submit">Submit</button>
+    <input type="text" placeholder="Write a message" name="uMessage"/>
+    Make public: <input type="checkbox" placeholder="Check to make public" value="true" name="uPublic">
+<!--- Make private: <input type="checkbox" value="true" name="uPrivate"> --->
+    <button type="submit">Submit</button>
 </form>
 <form action="/delete-message" method="post" id="removeUM">
     <input type="text" placeholder="Enter message number to delete" name="deleteUM">
@@ -86,16 +110,27 @@
 <br>
 <br>
 <p align="center" id="startList">Messages by {{name}}:</p>
-
+<table align="center">
 <ol style="text-align:center; list-style-position:inside;">
+    <tr>
+        <th>Message</th>
+    </tr>
 {{#messages}}
+    <tr>
+        <td align="center" id="col">
+            {{message}}
+        </td>
+        <td>
     <!-- thank you paul for helping me with this! -->
         <form  action="/delete-message" method="post">
             <input type="hidden" value="{{message}}" name="deleteUM">
-            <li>{{message}}<button type="submit">Delete</button></li>
+            <button type="submit" id="del">Delete</button>
         </form>
+        </td>
+    </tr>
 {{/messages}}
 </ol>
+</table>
 {{/name}}
 <br>
 <br>

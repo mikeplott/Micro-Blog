@@ -17,6 +17,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         HashMap<String, User> users = jsonReader().getUserWrapper();
+        ArrayList<Message> publicM = new ArrayList<>();
+
         Spark.get(
                 "/",
                 (request, response) -> {
@@ -42,6 +44,26 @@ public class Main {
                 new MustacheTemplateEngine()
         );
 
+        Spark.get(
+                "/public",
+                (request, response) -> {
+                    Session session = request.session();
+                    String name = session.attribute("uName");
+                    User user = users.get(name);
+                    HashMap m = new HashMap();
+                    if (user != null) {
+                        m.put("name", user.name);
+                        m.put("public", publicM);
+                        for (int i = 0; i < publicM.size(); i++) {
+                            m.put("pubRep", publicM.get(i).replies);
+                        }
+                        System.out.println(m);
+                    }
+                    return new ModelAndView(m, "public.html");
+                },
+                new MustacheTemplateEngine()
+        );
+
         Spark.post(
                 "/login",
                 (request, response) -> {
@@ -51,10 +73,12 @@ public class Main {
                         response.redirect("/");
                         return null;
                     }
-
                     User user = users.get(name);
                     if (user == null) {
-                        user = new User(name, pass, new ArrayList<Message>());
+                        user = new User();
+                        user.name = name;
+                        user.password = pass;
+                        user.messages = new ArrayList<>();
                         users.put(name, user);
                         jsonWriter(users);
                     } else if (!pass.equals(user.password)) {
@@ -89,7 +113,16 @@ public class Main {
                     String username = session.attribute("uName");
                     User user = users.get(username);
                     String theMessage = request.queryParams("uMessage");
-                    Message message = new Message(theMessage);
+                    Message message = new Message(theMessage, username, false, new ArrayList<Reply>());
+                    String pub = request.queryParams("uPublic");
+                    if (pub != null) {
+                        message.isPublic = true;
+                        publicM.add(message);
+                    }
+                    for (int i = 0; i < publicM.size(); i++) {
+                        Message test = publicM.get(i);
+                        System.out.println(test.author + " " + test.message + " " + test.isPublic);
+                    }
                     user.messages.add(message);
                     users.put(username, user);
                     jsonWriter(users);
@@ -105,9 +138,15 @@ public class Main {
                     String username = session.attribute("uName");
                     User user = users.get(username);
                     String text = request.queryParams("deleteUM");
-                    System.out.println(text);
                     for (int i = 0; i < user.messages.size(); i++) {
                         if (user.messages.get(i).message.equals(text)) {
+                            if (user.messages.get(i).isPublic = true) {
+                                for (int j = 0; i < publicM.size(); j++) {
+                                    if (publicM.get(j).message.equals(text)) {
+                                        publicM.remove(i);
+                                    }
+                                }
+                            }
                             user.messages.remove(i);
                         }
                     }
@@ -127,7 +166,7 @@ public class Main {
                     String text = request.queryParams("messageEdit");
                     String number = request.queryParams("theIndex");
                     int index = Integer.parseInt(number) - 1;
-                    if (index < 0) {
+                    if (index < 0 || index > user.messages.size()) {
                         response.redirect("/");
                     }
                     Message m = user.messages.get(index);
@@ -135,6 +174,29 @@ public class Main {
                     users.put(username, user);
                     jsonWriter(users);
                     response.redirect("/");
+                    return null;
+                }
+        );
+
+        Spark.post(
+                "/reply",
+                (request, response) -> {
+                    Session session = request.session();
+                    String username = session.attribute("uName");
+                    User user = users.get(username);
+                    String theMes = request.queryParams("tarMes");
+                    System.out.println(theMes);
+                    String text = request.queryParams("mReply");
+                    for (int i = 0; i < publicM.size(); i++) {
+                        if (publicM.get(i).equals(theMes)) {
+                            Message rep = publicM.get(i);
+                            System.out.println(rep);
+                            Reply theR = new Reply(text, user.name, true, new ArrayList<>());
+                            System.out.println(theR.message + " " + theR.author);
+                            rep.replies.add(theR);
+                        }
+                    }
+                    response.redirect("/public");
                     return null;
                 }
         );
