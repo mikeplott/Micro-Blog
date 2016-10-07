@@ -2,22 +2,31 @@
 <body>
 {{#name}}
 <h3>
-    Welcome {{name}}! Here you can view messages that every marks as public!
+    Welcome {{name}}! Here you can view messages that people marks as public!
+    <form action="/" method="get">
+        <button type="submit">Home</button>
+    </form>
 </h3>
 <table align="center" border="1px;">
     <th>Posted by</th>
     <th>Message</th>
     <th>Replies</th>
+    <th>Reply from</th>
+    <th>Reply</th>
             {{#public}}
             <tr>
                 <td>{{author}}</td>
-                <td align="center" id="col">
+                <td align="center" id="col" width="300">
                     {{message}}
                 </td>
-                <td>{{#reply}}
-                    {{replies}}
-                    {{/reply}}
-                </td>
+
+                <td width="300px">{{#replies}}
+                    {{reply}}<br>
+                </td>{{/replies}}
+                <td width="100px">{{#replies}}
+                    {{repAuthor}}<br>
+                </td>{{/replies}}
+
                 <td>
                     <form action="/reply" method="post">
                         <input type="hidden" value="{{message}}" name="tarMes">

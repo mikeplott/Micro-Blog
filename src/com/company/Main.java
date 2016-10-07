@@ -59,7 +59,7 @@ public class Main {
                             Message mes = publicM.get(i);
                          //   m.put("reply", mes.replies);
                             for (int j = 0; j < mes.replies.size(); j++) {
-                                m.put("reply", mes.replies.get(j).reply + " " + mes.replies.get(j).repAuthor);
+                                m.put("reply", mes.replies.get(j).reply + "   "+ "From - " + mes.replies.get(j).repAuthor);
                                 System.out.println(mes.replies.get(j));
                             }
                             //m.put("pubRep", publicM.get(i).replies.);

@@ -43,4 +43,12 @@ public class User {
         this.messages = messages;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", messages=" + messages +
+                '}';
+    }
 }

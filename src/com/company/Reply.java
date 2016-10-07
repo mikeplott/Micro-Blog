@@ -37,4 +37,23 @@ public class Reply {
     public String toString() {
         return reply + " " + repAuthor;
     }
+
+//    public Reply(String reply) {
+//        this.reply = reply;
+//    }
+//
+//    public String getReply() {
+//        return reply;
+//    }
+//
+//    public void setReply(String reply) {
+//        this.reply = reply;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "Reply{" +
+//                "reply='" + reply + '\'' +
+//                '}';
+//    }
 }
