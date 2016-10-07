@@ -19,13 +19,12 @@
                 <td align="center" id="col" width="300">
                     {{message}}
                 </td>
-
                 <td width="300px">{{#replies}}
                     {{reply}}<br>
-                </td>{{/replies}}
-                <td width="100px">{{#replies}}
+                    {{/replies}}</td>
+                <td width="100px"> {{#replies}}
                     {{repAuthor}}<br>
-                </td>{{/replies}}
+                {{/replies}}</td>
 
                 <td>
                     <form action="/reply" method="post">
