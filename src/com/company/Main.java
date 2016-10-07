@@ -17,7 +17,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         HashMap<String, User> users = jsonReader().getUserWrapper();
-        ArrayList<Message> publicM = new ArrayList<>();
+        PublicMessages pm = pubJsonReader();
+        ArrayList<Message> publicM = pm.pubMess;
         //HashMap<String, Message> pubMes = new HashMap<>();
 
         Spark.get(
@@ -123,6 +124,7 @@ public class Main {
                     if (pub != null) {
                         message.isPublic = true;
                         publicM.add(message);
+                        pubJsonWriter(publicM);
               //          pubMes.put(user.name + message.message, message);
                     }
                     user.messages.add(message);
@@ -146,6 +148,7 @@ public class Main {
                                 for (int j = 0; i < publicM.size(); j++) {
                                     if (publicM.get(j).message.equals(text)) {
                                         publicM.remove(i);
+                                        pubJsonWriter(publicM);
                                     }
                                 }
 //                                for (String key : pubMes.keySet()) {
@@ -180,6 +183,7 @@ public class Main {
                     m.message = text;
                     users.put(username, user);
                     jsonWriter(users);
+                    pubJsonWriter(publicM);
                     response.redirect("/");
                     return null;
                 }
@@ -211,6 +215,7 @@ public class Main {
                         Message message = publicM.get(i);
                         if (message.message.equals(theMes)) {
                             message.replies.add(theReply);
+                            pubJsonWriter(publicM);
                         }
                     }
                     response.redirect("/public");
@@ -218,6 +223,18 @@ public class Main {
                 }
         );
     }
+
+    public static void pubJsonWriter(ArrayList publicM) throws IOException {
+        File file = new File("pub.json");
+        JsonSerializer serializer = new JsonSerializer();
+        PublicMessages pm = new PublicMessages();
+        pm.pubMess = publicM;
+        String json = serializer.deep(true).serialize(pm);
+        FileWriter fw = new FileWriter(file);
+        fw.write(json);
+        fw.close();
+    }
+
     public static void jsonWriter(HashMap users) throws IOException {
         File file = new File("users.json");
         JsonSerializer serializer = new JsonSerializer();
@@ -237,6 +254,16 @@ public class Main {
         fr.read(contents, 0, fileSize);
         JsonParser parser = new JsonParser();
         return parser.parse(contents, MapWrapper.class);
+    }
+
+    public static PublicMessages pubJsonReader() throws IOException {
+        File file = new File("pub.json");
+        FileReader fr = new FileReader(file);
+        int fileSize = (int) file.length();
+        char[] contents = new char[fileSize];
+        fr.read(contents, 0, fileSize);
+        JsonParser parser = new JsonParser();
+        return parser.parse(contents, PublicMessages.class);
     }
 
 }

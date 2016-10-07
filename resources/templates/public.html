@@ -19,13 +19,18 @@
                 <td align="center" id="col" width="300">
                     {{message}}
                 </td>
-                <td width="300px">{{#replies}}
+                <td width="300px">
+                    <table border="1px">
+                        <tr>
+                            <td width="300px">{{#replies}}
                     {{reply}}<br>
                     {{/replies}}</td>
                 <td width="100px"> {{#replies}}
                     {{repAuthor}}<br>
-                {{/replies}}</td>
-
+                {{/replies}}
+                        </tr>
+                    </table>
+                </td>
                 <td>
                     <form action="/reply" method="post">
                         <input type="hidden" value="{{message}}" name="tarMes">
